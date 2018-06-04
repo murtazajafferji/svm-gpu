@@ -1,6 +1,6 @@
 # svm-gpu
 
-Multi-Class Support Vector Machine (SVM) library for [Python](https://www.python.org/)) with GPU
+Multiclass Support Vector Machine (SVM) library for [Python](https://www.python.org/) with GPU. This is a fast and dependable classification algorithm that performs very well with a limited amount of data.
 
 # Support Vector Machines
 [Wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine)  :
@@ -20,6 +20,11 @@ The advantages of support vector machines are:
 The disadvantages of support vector machines include:  
 * If the number of features is much greater than the number of samples, avoid over-fitting in choosing Kernel functions and regularization term is crucial.
 * SVMs do not directly provide probability estimates, these are calculated using an expensive five-fold cross-validation
+
+Applications: 
+>* SVMs are helpful in text and hypertext categorization as their application can significantly reduce the need for labeled training instances in both the standard inductive and transductive settings.
+>* Classification of images can also be performed using SVMs. Experimental results show that SVMs achieve significantly higher search accuracy than traditional query refinement schemes after just three to four rounds of relevance feedback.
+>* Hand-written characters can be recognized using SVM
 
 # Quick start
 If you are not familiar with SVM I highly recommend this [guide](http://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf).
