@@ -3,7 +3,7 @@
 Multiclass Support Vector Machine (SVM) library for [Python](https://www.python.org/) with GPU. This is a fast and dependable classification algorithm that performs very well with a limited amount of data.
 
 # Support Vector Machines
-[Wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine)  :
+[Wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine):
 
 >Support vector machines are supervised learning models that analyze data and recognize patterns. 
 >A special property is that they simultaneously minimize the empirical classification error and maximize the geometric margin; hence they are also known as maximum margin classifiers.
@@ -27,32 +27,26 @@ Applications:
 * Hand-written characters can be recognized using SVM
 
 # Quick start
-If you are not familiar with SVM I highly recommend this [guide](http://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf).
 
-Here's an example of using [svm-gpu](https://github.com/murtazajafferji/svm-gpu) to approximate the XOR function :
+Here's an example of using [svm-gpu](https://github.com/murtazajafferji/svm-gpu) to predict labels for images of hand-written digits:
 
 ```python
-import SVM from svm
 import cupy as xp 
 import sklearn.model_selection
-import time
+from sklearn.datasets import load_digits
 from svm import SVM
-import kernels
 
-xp.random.seed(0)
-x_simulated = xp.concatenate((xp.random.normal(-10,10,(100,60)),
-                              xp.random.normal(0,10,(100,60)),
-                              xp.random.normal(10,10,(100,60)),
-                              xp.random.uniform(-1,1,(100,60))),axis=0)
-
-y_simulated = xp.concatenate((xp.tile(0, 100),
-                              xp.tile(1, 100),
-                              xp.tile(2, 100),
-                              xp.tile(3, 100)),axis=0)
+# Load the digits dataset, made up of 1797 8x8 images of hand-written digits
+digits = load_digits()
 
 # Divide the data into train, test sets 
-x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x_simulated, y_simulated)
+x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(digits.data, digits.target)
 
+# Move data to GPU
+x_train = xp.asarray(x_train)
+x_test =  xp.asarray(x_test)
+y_train = xp.asarray(y_train)
+y_test = xp.asarray(y_test)
 
 # initialize a new predictor
 svm = SVM(kernel='rbf', kernel_params={'sigma': 15}, classification_strategy='ovr', x=x_train, y=y_train, n_folds=3, use_optimal_lambda=True, display_plots=True)
@@ -84,12 +78,12 @@ Possible parameters/options are:
 |------------------|------------------------|-------------------------------------------------------------------------------------------------------|
 | kernel                   | Required                  | Used kernel                                                                                           |
 | kernel\_params                   | Required                  | Used k parameters                                                                                           |
-| lambduh                   | `3`                  | Used lambda                                                                                           |
+| lambduh                   | `1`                  | Used lambda                                                                                           |
 | max\_iter                   | `1000`                  | Used maximum number of iterations     |
 | classification\_strategy | `ovr`                | Used classification strategy                | 
-| x | `x`                | Used x train                                                                            | 
-| y | `y`                | Used y train                                                                            | 
-| n\_folds                 | `4`                    | `k` parameter for [k-fold cross validation]( http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation). `k` must be >= 1. If `k===1` then entire dataset is use for both testing and training.  |
+| x | `None`                | Used x train                                                                            | 
+| y | `None`                | Used y train                                                                            | 
+| n\_folds                 | `3`                    | `k` parameter for [k-fold cross validation]( http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation). `k` must be >= 1. If `k===1` then entire dataset is use for both testing and training.  |
 | lambda\_vals                | `[.001, .01, .1, 1, 10, 100, 1000]`                    | Used lambda vals for cross validation
 | use\_optimal\_lambda     | `false`                  |  Whether to use optimal lambda                                                                      |
 | display_plots            | `false`                | Whether to show plots                                                                                 |
@@ -101,9 +95,9 @@ Possible classification strategies are:
 
 | Classification stratgey  | Description |
 |-------------|------------------------|
-| `binary`       | binary classifier |
-| `ovo`      | one-vs-one classifier |
-| `ovr`   | one-vs-rest classifier   |
+| `binary`       | binary classification |
+| `ovo`      | one-vs-one classification |
+| `ovr`   | one-vs-rest classification   |
 
 ## Kernels
 
@@ -113,7 +107,7 @@ Possible kernels and kernal params are:
 |---------|-------------------------------------------|-------------------------------- |
 | `linear`  | `{}`                                    | Use when number of features is larger than number of observations. |
 | `poly`    | `{'degree': <int>}`                     | |
-| `rbf`     | `{'gamma':<float>}`                     | Use gaussian (rbg) kernel when number of observations is larger than number of features. If number of observations is larger than 50,000 speed could be an issue when using gaussian kernel; hence, one might want to use linear kernel.                  |
+| `rbf`     | `{'gamma':<float>}`                     | Use Gaussian Radial Basis Function (rbf) kernel when number of observations is larger than number of features. If number of observations is larger than 50,000 speed could be an issue when using gaussian kernel; hence, one might want to use linear kernel.                  |
 | `sigmoid` | `{'alpha':<float>, 'beta':<float>}`     | |
 
 # Requirements
