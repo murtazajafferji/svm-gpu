@@ -1,6 +1,6 @@
 # svm-gpu
 
-Support Vector Machine (SVM) library for [Python](https://www.python.org/)) with GPU
+Multi-Class Support Vector Machine (SVM) library for [Python](https://www.python.org/)) with GPU
 
 # Support Vector Machines
 [Wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine)  :
@@ -8,6 +8,18 @@ Support Vector Machine (SVM) library for [Python](https://www.python.org/)) with
 >Support vector machines are supervised learning models that analyze data and recognize patterns. 
 >A special property is that they simultaneously minimize the empirical classification error and maximize the geometric margin; hence they are also known as maximum margin classifiers.
 >[![Wikipedia image](http://upload.wikimedia.org/wikipedia/commons/1/1b/Kernel_Machine.png)](http://en.wikipedia.org/wiki/File:Kernel_Machine.png)
+
+
+The advantages of support vector machines are:  
+* Effective in high dimensional spaces.
+* Still effective in cases where number of dimensions is greater than the number of samples.
+* Uses a subset of training points in the decision function (called support vectors), so it is also memory efficient.
+* Versatile: different Kernel functions can be specified for the decision function. Common kernels are provided, but it is also possible to specify custom kernels.  
+* Higher speed and better performance with a limited number of samples (in the thousands) compared to neural networks  
+
+The disadvantages of support vector machines include:  
+* If the number of features is much greater than the number of samples, avoid over-fitting in choosing Kernel functions and regularization term is crucial.
+* SVMs do not directly provide probability estimates, these are calculated using an expensive five-fold cross-validation
 
 # Quick start
 If you are not familiar with SVM I highly recommend this [guide](http://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf).
@@ -93,12 +105,12 @@ Possible classification strategies are:
 
 Possible kernels and kernal params are:
 
-| Kernel  | Kernel params                     |
-|---------|--------------------------------|
-| `linear`  | `{}`                   |
-| `poly`    | `{'degree': <int>}`                       |
-| `rbf`     | `{'gamma':<float>}`                        |
-| `sigmoid` | `{'alpha':<float>, 'beta':<float>}`                |
+| Kernel  | Kernel params                             | Notes                           |
+|---------|-------------------------------------------|-------------------------------- |
+| `linear`  | `{}`                                    | Use when number of features is larger than number of observations. |
+| `poly`    | `{'degree': <int>}`                     | |
+| `rbf`     | `{'gamma':<float>}`                     | Use gaussian (rbg) kernel when number of observations is larger than number of features. If number of observations is larger than 50,000 speed could be an issue when using gaussian kernel; hence, one might want to use linear kernel.                  |
+| `sigmoid` | `{'alpha':<float>, 'beta':<float>}`     | |
 
 # Requirements
 * NVIDIA CUDA GPU  
