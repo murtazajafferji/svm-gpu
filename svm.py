@@ -10,7 +10,7 @@ import itertools
 class SVM():
     """support vector machine"""
 
-    def __init__(self, kernel, kernel_params, lambduh=1, max_iter=1000, classification_strategy='ovr', x=None, y=None, n_folds=3, num_lambda=10, lambda_max=2**4, display_plots=False, logging=False):
+    def __init__(self, kernel, kernel_params, lambduh=1, max_iter=1000, classification_strategy='ovr', x=None, y=None, n_folds=3, lambda_vals=None, use_optimal_lambda=False, display_plots=False, logging=False):
         """initialize the classifier"""
 
         self._kernel = kernel
@@ -24,10 +24,12 @@ class SVM():
         self._coef_matrix = []
 
         self._n_folds = n_folds
-        self._num_lambda = num_lambda
-        self._lambda_max = lambda_max
         self._display_plots = display_plots
         self._logging = logging
+        self._lambda_vals = lambda_vals
+        if self._lambda_vals is None:
+            self._lambda_vals = [10**i for i in range(-3, 4)]
+        self._use_optimal_lambda = use_optimal_lambda
 
     def fit(self, x=None, y=None, prevent_relabel=False, use_optimal_lambda=False):
         """Trains the kernel support vector machine with the huberized hinge loss"""
@@ -45,7 +47,7 @@ class SVM():
         elif self._classification_strategy == 'ovo' or self._classification_strategy == 'binary':
             iterate_over = SVM._get_unique_pairs(self._y)
 
-        if use_optimal_lambda:
+        if self._use_optimal_lambda or use_optimal_lambda:
             self._lambduh, misclassification_error = self.compute_optimal_lambda()
             print('Misclassification error (train), {}, optimal lambda = {} : {}'.format(self._classification_strategy, self._lambduh, misclassification_error))
 
@@ -84,13 +86,10 @@ class SVM():
         return
 
     def cross_validation_error(self):
-        error_per_lambda = xp.zeros(self._num_lambda)
+        error_per_lambda = xp.zeros(len(self._lambda_vals))
 
-        lambduh = self._lambda_max
-        lambdas = xp.zeros(self._num_lambda)
-
-        for i in range(self._num_lambda):
-            lambdas[i] = lambduh
+        for i in range(len(self._lambda_vals)):
+            lambduh = self._lambda_vals[i]
             if self._logging:
                 print('lambduh = {} ({} of {})'.format(lambduh, i + 1, num_lambda))
             error_per_fold = xp.zeros(self._n_folds)
@@ -114,17 +113,16 @@ class SVM():
 
             error_per_lambda[i] = xp.mean(error_per_fold)
             
-            lambduh /= 2 
-        return error_per_lambda.tolist(), lambdas
+        return error_per_lambda.tolist()
 
     def compute_optimal_lambda(self):
-        cross_validation_error, lambdas = self.cross_validation_error()
+        cross_validation_error = self.cross_validation_error()
         if self._display_plots:
-            df = pd.DataFrame({'lambda':xp.asnumpy(lambdas), 'Cross validation error':xp.asnumpy(cross_validation_error)})
+            df = pd.DataFrame({'lambda':self._lambda_vals, 'Cross validation error':xp.asnumpy(cross_validation_error)})
             display(df)
             df.plot('lambda', 'Cross validation error', logx=True)
             plt.show()
-        return lambdas[np.nanargmin(cross_validation_error)], np.min(cross_validation_error)
+        return self._lambda_vals[np.nanargmin(cross_validation_error)], np.min(cross_validation_error)
 
     def compute_misclassification_error(self, x, y): 
         y_pred = self.predict(x)
@@ -184,16 +182,16 @@ class SVM():
         return x, y
 
     @staticmethod
-    def subset_data(X, y, max_samples):
-        if max_samples is None or max_samples > len(X):
-            return X, y
+    def subset_data(x, y, max_samples):
+        if max_samples is None or max_samples > len(x):
+            return x, y
         else:
-            idx = np.random.choice(np.arange(len(X)), max_samples, replace=False)
-            return X[idx], y[idx]
+            idx = np.random.choice(np.arange(len(x)), max_samples, replace=False)
+            return x[idx], y[idx]
     @staticmethod   
-    def subset_data_gpu(X, y, max_samples):
-        X, y = subset_data(X, y, max_samples)
-        return xp.asarray(X), xp.asarray(y)
+    def subset_data_gpu(x, y, max_samples):
+        x, y = subset_data(x, y, max_samples)
+        return xp.asarray(x), xp.asarray(y)
 
     @staticmethod
     def _get_unique_pairs(y):
@@ -250,7 +248,10 @@ class SVM():
 
     def _compute_gram_matrix(self):
         """Computes, for any set of datapoints x1,...,xn, the kernel matrix K"""
-        gram = kernels.kernel_dict[self._kernel](self._x, self._x, self._kernel_params)
+        kernel = self._kernel
+        if kernel == 'rbf':
+            kernel += '_sklearn'
+        gram = kernels.kernel_dict[kernel](self._x, self._x, self._kernel_params)
         return gram
 
     # 
