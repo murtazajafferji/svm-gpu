@@ -22,9 +22,9 @@ The disadvantages of support vector machines include:
 * SVMs do not directly provide probability estimates, these are calculated using an expensive five-fold cross-validation
 
 Applications: 
->* SVMs are helpful in text and hypertext categorization as their application can significantly reduce the need for labeled training instances in both the standard inductive and transductive settings.
->* Classification of images can also be performed using SVMs. Experimental results show that SVMs achieve significantly higher search accuracy than traditional query refinement schemes after just three to four rounds of relevance feedback.
->* Hand-written characters can be recognized using SVM
+* SVMs are helpful in text and hypertext categorization as their application can significantly reduce the need for labeled training instances in both the standard inductive and transductive settings.
+* Classification of images can also be performed using SVMs. Experimental results show that SVMs achieve significantly higher search accuracy than traditional query refinement schemes after just three to four rounds of relevance feedback.
+* Hand-written characters can be recognized using SVM
 
 # Quick start
 If you are not familiar with SVM I highly recommend this [guide](http://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf).
