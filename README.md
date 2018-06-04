@@ -85,9 +85,8 @@ Possible parameters/options are:
 | kernel                   | Required                  | Used kernel                                                                                           |
 | kernel\_params                   | Required                  | Used k parameters                                                                                           |
 | lambduh                   | `3`                  | Used lambda                                                                                           |
-| max_iter                   | `1000`                  | Used maximum number of iterations                                                                                       |
-
-| classification\_strategy | `ovr`                | Used classification strategy                                                                            | 
+| max\_iter                   | `1000`                  | Used maximum number of iterations     |
+| classification\_strategy | `ovr`                | Used classification strategy                | 
 | x | `x`                | Used x train                                                                            | 
 | y | `y`                | Used y train                                                                            | 
 | n\_folds                 | `4`                    | `k` parameter for [k-fold cross validation]( http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation). `k` must be >= 1. If `k===1` then entire dataset is use for both testing and training.  |
