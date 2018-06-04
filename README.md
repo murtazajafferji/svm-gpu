@@ -1,6 +1,6 @@
 # svm-gpu
 
-Support Vector Machine (SVM) library for [Python](https://www.python.org/)) with GPU.
+Support Vector Machine (SVM) library for [Python](https://www.python.org/)) with GPU
 
 # Support Vector Machines
 [Wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine)  :
@@ -8,20 +8,6 @@ Support Vector Machine (SVM) library for [Python](https://www.python.org/)) with
 >Support vector machines are supervised learning models that analyze data and recognize patterns. 
 >A special property is that they simultaneously minimize the empirical classification error and maximize the geometric margin; hence they are also known as maximum margin classifiers.
 >[![Wikipedia image](http://upload.wikimedia.org/wikipedia/commons/1/1b/Kernel_Machine.png)](http://en.wikipedia.org/wiki/File:Kernel_Machine.png)
-
-# Requirements
-* NVIDIA CUDA GPU  
-  Compute Capability of the GPU must be at least 3.0.
-* CUDA Toolkit  
-  Supported Versions: 7.0, 7.5, 8.0, 9.0 and 9.1.  
-  If you have multiple versions of CUDA Toolkit installed, CuPy will choose one of the CUDA installations automatically. See Working with Custom CUDA Installation for details.
-* Python  
-  Supported Versions: 2.7.6+, 3.4.3+, 3.5.1+ and 3.6.0+.
-* CuPy  
-  Supported Versions:  4.0.0+.
-* NumPy  
-  Supported Versions: 1.9, 1.10, 1.11, 1.12 and 1.13.  
-  NumPy will be installed automatically during the installation of CuPy.
 
 # Quick start
 If you are not familiar with SVM I highly recommend this [guide](http://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf).
@@ -63,8 +49,8 @@ svm.predict(x_test)
 misclassification_error = svm.compute_misclassification_error(x_test, y_test)
 print('Misclassification error, lambda = {} : {}\n'.format(svm._lambduh, misclassification_error))
 
-#******** CONSOLE ********
-
+# ******** Output ********
+# Misclassification error, lambda = .1 : 0.015555555555555545
 
 ```
 
@@ -113,6 +99,20 @@ Possible kernels and kernal params are:
 | `poly`    | `{'degree': <int>}`                       |
 | `rbf`     | `{'gamma':<float>}`                        |
 | `sigmoid` | `{'alpha':<float>, 'beta':<float>}`                |
+
+# Requirements
+* NVIDIA CUDA GPU  
+  Compute Capability of the GPU must be at least 3.0.
+* CUDA Toolkit  
+  Supported Versions: 7.0, 7.5, 8.0, 9.0 and 9.1.  
+  If you have multiple versions of CUDA Toolkit installed, CuPy will choose one of the CUDA installations automatically. See Working with Custom CUDA Installation for details.
+* Python  
+  Supported Versions: 2.7.6+, 3.4.3+, 3.5.1+ and 3.6.0+.
+* CuPy  
+  Supported Versions:  4.0.0+.
+* NumPy  
+  Supported Versions: 1.9, 1.10, 1.11, 1.12 and 1.13.  
+  NumPy will be installed automatically during the installation of CuPy.
 
 # License
 MIT
